@@ -3,7 +3,7 @@
 #include<vector>
 
 using namespace std;
-
+//有向无环图，下标表示结点，数据表示weight。
 vector<vector<int>> DAG = {
     { 0,0,7,4,0,2},
     { 3,0,0,0,5,0},
@@ -13,28 +13,32 @@ vector<vector<int>> DAG = {
     { 0,0,0,0,0,0}
 };
 
+//将该图拓扑排序 
 vector<int> toplogical_sort(vector<vector<int>> DAG)
 {
-    vector<int> R,S,ct;
+    vector<int> R,S,ct; //R存放入度为0的数组 S存放待处理结点
     int row,col,node_numbers,i=0;
     node_numbers=col=row=DAG.size();
-    ct.resize(row);
+    ct.resize(row); //计数 每个结点可以到到达的其他结点数
+    //遍历该图 生成ct数组
     for(int j=0;j<col;++j){
         for( i=0;i<row;++i){
             if(DAG[i][j]!=0) ++ct[j];
         }
     }
+    //将没有入度的结点加入到S中
     for(i=0;i<node_numbers;++i){
         if(ct[i]==0) S.push_back(i);
     }
-
+    
+    
     for(i=node_numbers;i>0;--i){
         int node = S[0];
         R.push_back(node);
         S.erase(S.begin());
         for(int j=0;j<col;++j){
             if(DAG[node][j] != 0){
-                DAG[node][j] = 0;
+                //结点为空
                 if(--ct[j]==0){
                     S.push_back(j);
                 }
@@ -45,14 +49,16 @@ vector<int> toplogical_sort(vector<vector<int>> DAG)
     cout << endl;
     return R;
 }
+
 int main()
 {
     vector<int> R = toplogical_sort(DAG);
-    vector<int> e(6,0);
+    vector<int> e(6,0);//存放到达index结点的最长距离
     int sz = R.size();
     for(int i=0;i<=sz;++i){
         int node = R[i];
         for(int j=0;j<sz;++j){
+            // 通过node结点到达j结点的长度 比之前到达j结点的最长距离还要长 这更新e[j]
             if(DAG[node][j]!=0 && DAG[node][j]+e[node]>e[j]){
                 e[j] = DAG[node][j]+e[node];
             }
