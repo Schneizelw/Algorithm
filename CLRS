@@ -1,0 +1,63 @@
+#include<iostream>
+#include<forward_list>
+#include<vector>
+
+using namespace std;
+
+vector<vector<int>> DAG = {
+    { 0,0,7,4,0,2},
+    { 3,0,0,0,5,0},
+    { 0,0,0,1,0,1},
+    { 0,0,0,0,0,2},
+    { 2,0,6,0,0,0},
+    { 0,0,0,0,0,0}
+};
+
+vector<int> toplogical_sort(vector<vector<int>> DAG)
+{
+    vector<int> R,S,ct;
+    int row,col,node_numbers,i=0;
+    node_numbers=col=row=DAG.size();
+    ct.resize(row);
+    for(int j=0;j<col;++j){
+        for( i=0;i<row;++i){
+            if(DAG[i][j]!=0) ++ct[j];
+        }
+    }
+    for(i=0;i<node_numbers;++i){
+        if(ct[i]==0) S.push_back(i);
+    }
+
+    for(i=node_numbers;i>0;--i){
+        int node = S[0];
+        R.push_back(node);
+        S.erase(S.begin());
+        for(int j=0;j<col;++j){
+            if(DAG[node][j] != 0){
+                DAG[node][j] = 0;
+                if(--ct[j]==0){
+                    S.push_back(j);
+                }
+            }
+        }//for
+    }//while
+   // for(auto u:R) cout << u<<" ";
+    cout << endl;
+    return R;
+}
+int main()
+{
+    vector<int> R = toplogical_sort(DAG);
+    vector<int> e(6,0);
+    int sz = R.size();
+    for(int i=0;i<=sz;++i){
+        int node = R[i];
+        for(int j=0;j<sz;++j){
+            if(DAG[node][j]!=0 && DAG[node][j]+e[node]>e[j]){
+                e[j] = DAG[node][j]+e[node];
+            }
+        }
+    }
+    for(auto u:e)
+        cout << u << " ";
+}
