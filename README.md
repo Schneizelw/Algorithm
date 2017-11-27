@@ -1,3 +1,3 @@
 # Algorithm
-一些自己写过的算法<br> test
+一些自己写过的[算法]<br> test
 
