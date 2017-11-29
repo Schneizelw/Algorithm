@@ -14,19 +14,19 @@ using namespace std;
 
 void max_sub_palindrome(string str)
 {
-     int len = str.length();
+    int len = str.length();
     str = " " + str;//因为处理从下表为1开始 即不用0下表
     vector<vector<string>> e;
-    e.resize(len+1);
+    e.resize(len+1); //索引为0不用
     for(int i=0;i<=len;++i){
         e[i].resize(len+1);
     }
-    //初始化i==j的最长子回文
+    //初始化i==j的最长子回文 为一个字母
     for(int i=1;i<=len;++i){
         e[i][i] = str[i];
     }
 
-    for(int l=2;l<=len;++l){   //l为被检车str子串的长度
+    for(int l=2;l<=len;++l){   //l为被检测str子串的长度
         for(int i=1;i<=len-l+1;++i){  //i为str子串的起始索引下标
             int j = i+l-1;            //j为str子串的结束索引小标
             //递归式处理
@@ -51,11 +51,13 @@ void max_sub_palindrome(string str)
     //打印结果
     for(int i=1;i<=len;++i){
         for(int j=1;j<=len;++j)
-            cout <<setw(8) <<e[i][j];
+            cout << setw(8) << e[i][j];
         cout << endl;
     }
-    cout << e[1][len]<<endl;
-
+    //str为形如ab这种情况的时候不打印 但一个字母的情况需要打印
+     if((e[1][len].size()!=1 && len!=1) || (e[1][len].size()==1 && len==1))
+        cout << e[1][len]<<endl;
+        
 }
 
 int main()
