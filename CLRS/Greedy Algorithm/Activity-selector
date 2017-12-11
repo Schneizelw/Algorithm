@@ -1,0 +1,69 @@
+//!RECURSIVE-ACTIVITY-SELECTOR(s,f,m,n)
+/*
+1   m = k + 1
+2   while m<=n and s[m]<f[k]
+3       m = m + 1
+4   if m <= n
+5        return {am} U RECURSIVE-ACTIVITY-SELECTOR(s,f,m,n)
+6   else  return Φ
+*/
+
+//!GREEDY-ACTIVITY-SELECTOR(s,f)
+/*
+1   n = s.length
+2   A = {a1}
+3   k = 1
+4   for m=2 to n
+5       if s[m]>=f[k]
+6           A = A U {am}
+7           k = m
+8   return A
+*/
+
+#include<iostream>
+#include<vector>
+using namespace std;
+vector<int> r;
+
+//s为活动的起始时间，f为活动的结束时间，k为上一个活动，n活动的个数。递归算法
+void RECURSIVE_ACTIVITY_SELECTOR(vector<int> s,vector<int> f,int k,int n)
+{
+    int m = k+1;
+    while(m<=n && s[m]<f[k]) ++m;//找出其实时间大于上一个活动的结束时间的活动
+    if(m <= n){
+        r.push_back(m);
+        RECURSIVE_ACTIVITY_SELECTOR(s,f,m,n);
+    }
+}
+
+//迭代算法
+vector<int> GREEDY_ACTICITY_SELECTOR(vector<int> s,vector<int> f)
+{
+    int n = s.size();
+    vector<int> r1;
+    r1.push_back(1);//第一个活动肯定在结果中。
+    for(int m=1,k=0;m<n;++m){
+        if(s[m]>=f[k]){
+            r1.push_back(m+1);
+            k = m;
+        }
+    }
+    return r1;
+}
+
+int main()
+{
+    //加上第0个活动，可以优化进入递归算法的代码
+    vector<int> s = {0,1,3,0,5,3,5,6,8,8,2,12};
+    vector<int> f = {0,4,5,6,7,9,9,10,11,12,14,16};
+    vector<int> s1 = {1,3,0,5,3,5,6,8,8,2,12};
+    vector<int> f1 = {4,5,6,7,9,9,10,11,12,14,16};
+
+    auto len = s.size()-1;
+    RECURSIVE_ACTIVITY_SELECTOR(s,f,0,len);
+    vector<int> r2 = GREEDY_ACTICITY_SELECTOR(s1,f1);
+
+    for(auto n:r) cout <<n << " ";
+    cout << endl;
+    for(auto n:r2) cout <<n << " ";
+}
