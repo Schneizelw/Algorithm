@@ -1,0 +1,121 @@
+//!MATRIX-CHAIN-ORDER(p)
+/* let m[1..n,1..n] and s[1..n-1,2..n] be new tables
+1   n = p.length-1
+2   for i = 1 to n
+3       m[i,i]=0;
+4   for l = 2 to n
+5       for i = 1 to n-l+1
+6           j =i+l-1
+7           m[i,j] = ∞
+8           for k =i to j-1
+9               q = m[i,k]+m[k+1,j]+p(i-1)p(k)p(j)
+10              if q < m[i,j]
+11                  m[i,j] = q
+12                  s[i,j] = k
+13  return m and s
+*/
+
+//!PRINT-OPTIMAL-PARENS(s,i,j)
+/*
+1   if(i==j)
+2       print "Ai"
+3   else print "("
+4       PRINT-OPTIMAL-PARENTS(s,i,s[i,j])
+5       PRINT-OPTIMAL-PARENTS(s,s[i,j]+1,j)
+6        print ")"
+*/
+#include<iostream>
+#include<vector>
+#include<iomanip>  //控制输出setw
+#include<limits>
+using namespace std;
+
+
+
+vector<vector<int>> MATRIX_CHAIN_ORDER(vector<int> p)
+{
+    int n = p.size()-1; //n为矩阵的个数加1
+    vector<vector<int>> m;//m[i][j]表示第i个矩阵到第j个矩阵连乘的最少运算次数。
+    vector<vector<int>> s;//s[i][j]表示第i个矩阵到第j个矩阵连乘的最佳分割位置。
+    m.resize(n+1);
+    for(int i=0;i<=n;++i) m[i].resize(n+1);
+    s.resize(n);
+    for(int i=0;i<n;++i) s[i].resize(n+1);
+    
+    //初始化单个矩阵运算次数为0
+    for(int i=1;i<=n;++i){
+        m[i][i] = 0;
+
+    }
+    
+    //自底向上遍历 l为连乘的矩阵长度(个数)
+    for(int l=2;l<=n;++l){
+        //i为起始位置 n-l+1指的是长度为l矩阵链有多少对
+        for(int i=1;i<=n-l+1;++i){  
+            int j = i+l-1;  //j为长度为l的矩阵连的上限
+            m[i][j] = INT_MAX;
+            //k为当前连续矩阵的切割位置 遍历每一个位置求出运算最少的位置
+            for(int k=i;k<=j-1;++k){
+                int q = m[i][k]+m[k+1][j]+p[i-1]*p[k]*p[j];//q为乘法的数量
+                if(q<m[i][j]){
+                    m[i][j] = q;
+                    s[i][j] = k;
+                }//if
+
+            }//for
+        }//for
+    }//for
+
+    for(int i =1;i<=n;++i){
+        for(int j =1;j<=n;++j){
+           cout << setw(5) << m[i][j]<<"  ";
+        }
+        cout << endl;
+    }
+    cout << endl;
+    for(int i =1;i<n;++i){
+        for(int j =1;j<=n;++j){
+           cout << setw(5) << s[i][j]<<"  ";
+        }
+        cout << endl;
+    }
+
+
+    return s;
+
+}
+
+//打印括号 i为起始位置，j为结束位置。s[i][j]表示第i个矩阵到第j个矩阵连乘的最佳分割位置。
+void PRINT_OPTIMAL_PARENTS(vector<vector<int>> s,int i,int j)
+{
+    if(i==j) cout << "A"<< i;
+    else{
+        cout << "(";
+        PRINT_OPTIMAL_PARENTS(s,i,s[i][j]);
+        PRINT_OPTIMAL_PARENTS(s,s[i][j]+1,j);
+        cout << ")";
+    }
+}
+
+int main()
+{
+    vector<int> p = {30,35,15,5,10,20,25};
+    auto s = MATRIX_CHAIN_ORDER(p);
+    PRINT_OPTIMAL_PARENTS(s,1,6);
+    cout << endl;
+
+    vector<int> p1 = {5,10,3,12,5,50,6};
+    auto s1 = MATRIX_CHAIN_ORDER(p1);
+    PRINT_OPTIMAL_PARENTS(s1,1,6);
+
+}
+
+
+
+
+
+
+
+
+
+
