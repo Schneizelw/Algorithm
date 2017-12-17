@@ -1,0 +1,84 @@
+//!HUFFMAN(C)
+/*
+1   n = |C|
+2   Q = C
+3   for int i=1 to n-1
+4       allocate a new node z
+5       z.left = x = EXTRACT-MIN(Q)
+6       z.right = y = EXTRACT-MIN(Q)
+7       z.freq = x.freq + y.freq
+8       INSERT(Q,z)
+9   return EXTRACT-MIN(Q)
+*/
+
+#include<iostream>
+#include<vector>
+#include<algorithm>
+
+using namespace std;
+
+class node
+{
+public:
+    node():c('t'),freq(0),left(NULL),right(NULL){}
+    node(char ch,int fre):c(ch),freq(fre),left(NULL),right(NULL){}
+public:
+    char c;
+    int freq;
+    class node* left;
+    class node* right;
+};
+
+void print_result(node re)
+{
+    if(re.left!=NULL){
+        cout << re.c;
+        print_result(*(re.left));
+        print_result(*(re.right));
+    }else{
+        cout << re.c;
+    }
+}
+bool comparable(node a,node b)
+{
+    return a.freq < b.freq;
+}
+
+node HUFFMAN(vector<node> &C)
+{
+    int n = C.size();
+    vector<node> Q(C.begin(),C.end());
+    for(int i=1;i<=n-1;++i){
+        node *z = new node;
+        node *x = new node;
+        node *y = new node;
+        *x = Q[0];
+        *y = Q[1];
+        z->left = x;
+        z->right = y;
+        z->freq = x->freq + y->freq;
+        for(int j=2;j>0;--j){
+           auto iter =  Q.erase(Q.begin());
+        }
+        Q.push_back(*z);
+        sort(Q.begin(),Q.end(),comparable);
+    }
+    return Q[0];
+}
+
+
+
+int main()
+{
+    vector<char> vec_chr = {'a','b','c','d','e','f'};
+    vector<int> vec_fre = {45,13,12,16,9,5};
+    int len = vec_chr.size();
+    vector<node> C;
+    for(int i=0;i<len;++i){
+        node temp(vec_chr[i],vec_fre[i]);
+        C.push_back(temp);
+    }
+    sort(C.begin(),C.end(),comparable);
+    node re = HUFFMAN(C);
+    print_result(re);
+}
