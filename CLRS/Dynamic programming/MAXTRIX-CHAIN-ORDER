@@ -109,13 +109,3 @@ int main()
     PRINT_OPTIMAL_PARENTS(s1,1,6);
 
 }
-
-
-
-
-
-
-
-
-
-
