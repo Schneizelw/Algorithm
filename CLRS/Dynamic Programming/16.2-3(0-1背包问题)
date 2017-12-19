@@ -45,7 +45,7 @@ void Knapsack_problem( vector<pair<int,int>> &available,int capacity)
 
 
 int main()
-{   //<int,int>为价格 重量。 按"价值"递增排序。
+{   //<int,int>为价格 重量。
     vector<pair<int,int>> available = {{0,0},{3,2},{4,3},{5,4},{6,5}};
 
     Knapsack_problem(available,8);
