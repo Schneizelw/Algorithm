@@ -1,0 +1,31 @@
+#include<vector>
+#include<limits>
+#include<iostream>
+using namespace std;
+
+//coins表示硬币系统，tot表示需要找零重量
+int func(vector<int> coins,int tot)
+{
+    vector<int> d; //d[i]表示i元 找零的最少硬币数
+    d.push_back(0);//d[0] = 0
+
+    int sz = coins.size();
+    //从最小单位1开始 直到tot
+    for(int temp_tot=1;temp_tot<=tot;++temp_tot){
+        int min = INT_MAX; //初始化最小值，如果货币系统不能实现f元找零找零那么d[f]中就会出现INT_MAX
+        //实现递归式 temp_tot = min(d[temp_tot-coins[i]]+1) 必须 temp_tot >= coins[i]
+        for(int i=0;i<sz;++i){
+            if(temp_tot>=coins[i] && d[temp_tot-coins[i]]+1 < min){
+                min = d[temp_tot-coins[i]]+1;
+            }
+        }
+        d.push_back(min);
+    }
+    return d.back();
+}
+
+int main()
+{
+    vector<int> coins = {1,2,5,10,20,50,100,500};
+    cout << func(coins,600);
+}
