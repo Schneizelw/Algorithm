@@ -1,0 +1,30 @@
+
+#include<vector>
+#include<limits>
+#include<iostream>
+using namespace std;
+
+
+int max_sum(vector<int> arr)
+{
+    int max = 0,cur_max=0;
+    int sz = arr.size();
+    //遍历一次数组
+    for(int i=0;i<sz;++i){
+        //如果当前最大值大于0则继续加下去，因为下一个元素就有可能得出最大值
+        if(cur_max+arr[i]>=0){
+            cur_max += arr[i];
+        }else{//当前最大值小于0，肯定会使下一个数据的值变得更低，重新开始让cur_max=0
+            cur_max = 0;
+        }
+        if(cur_max>max) max = cur_max;//保存最大值
+    }
+    return max;
+}
+
+
+int main()
+{
+    vector<int> arr = {-2,11,-4,13,-5,-2};
+    cout << max_sum(arr) <<endl;
+}
