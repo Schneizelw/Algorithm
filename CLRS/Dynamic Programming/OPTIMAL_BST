@@ -1,0 +1,77 @@
+//!OPTIMAL-BST(p,q,n)
+/*
+1   let e[1..n+1,0..n],w[1..n+1,0..n],and root[1..n,1..n] be new tables
+2   for i=1 to n+1
+3       e[i,i-1] = qi-1
+4       w[i,i-1] = qi-1
+5   for l=1 to n
+6       for i=1 to n-l+1
+7           j = i+l-1
+8           e[i,j] = ¡Þ
+9           w[i,j] = w[i,j-1]+pj+qj
+10          for r = i to j
+11              t = e[i,r-1] + e[r+1,j]+w[i,j]
+12              if t < e[i,j]
+13                  e[i,j] = t
+14                  root[i,j] = r
+15  return e and root
+*/
+
+#include<iostream>
+#include<vector>
+#include<limits>
+#include<iomanip>
+using namespace std;
+
+vector<vector<int>> OPTIMAL_BST(vector<float> p,vector<float> q,int n)
+{
+    vector<vector<float>> e,w;
+    e.resize(n+2);
+    w.resize(n+2);
+    for(int i=0;i<=n+1;++i){
+        e[i].resize(n+1);
+        w[i].resize(n+1);
+    }
+
+    vector<vector<int>> root;
+    root.resize(n+1);
+    for(int i=0;i<=n;++i){
+        root[i].resize(n+1);
+    }
+
+    for(int i=1;i<=n+1;++i){
+        e[i][i-1] = q[i-1];
+        w[i][i-1] = q[i-1];
+    }
+
+    for(int l=1;l<=n;++l){
+        for(int i=1;i<=n-l+1;++i){
+            int j = i+l-1;
+            e[i][j] = INT_MAX;
+            w[i][j] = w[i][j-1] + p[j] + q[j];
+            for(int r=i;r<=j;++r){
+                float t = e[i][r-1] + e[r+1][j] + w[i][j];
+                if(t<e[i][j]){
+                    e[i][j] = t;
+                    root[i][j] = r;
+                }
+            }
+        }
+    }
+    for(int i =1;i<=n+1;++i){
+        for(int j=0;j<=n;++j){
+            cout << setw(5) <<e[i][j];
+        }
+        cout << endl;
+    }
+    return root;
+}
+
+int main()
+{
+    vector<float> p = {0,0.15,0.10,0.05,0.10,0.20};
+    vector<float> q = {0.05,0.10,0.05,0.05,0.05,0.10};
+    int n = p.size()-1;
+    OPTIMAL_BST(p,q,n);
+
+}
