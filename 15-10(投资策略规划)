@@ -1,0 +1,69 @@
+#include<iostream>
+#include<vector>
+#define YEARS 10
+#define INVEST 8
+#define F1 100
+#define F2 400
+#define BEGIN 10000
+#include<iomanip>
+using namespace std;
+
+void best_investment(vector<vector<double>> r)
+{
+    vector<vector<double>> best;
+    best.resize(YEARS+1);
+    for(int i=0;i<=YEARS;++i) best[i].resize(INVEST+1);
+    int max_index = 0;
+    for(int j=0;j<INVEST;++j){
+        if(r[0][j]>max_index) max_index = j+1;
+        best[1][j+1] = BEGIN*(r[0][j]+1);
+    }
+    for(int i=1;i<YEARS;++i){
+        for(int j=0;j<INVEST;++j){
+            double income1 = (best[i][j+1]-F1)*(1+r[i][j]);
+            double income2 = (best[i][max_index]-F2)*(1+r[i][j]);
+            if(income1>income2){
+                best[i+1][j+1] = income1;
+
+            }else{
+                best[i+1][j+1] = income2;
+            }
+        }
+        double max_income=0;
+        for(int k=1;k<=INVEST;++k){
+            if(best[i+1][k]>max_income){
+                max_income = best[i+1][k];
+                max_index = k;
+            }
+        }
+    }
+
+    for(int i=1;i<=YEARS;++i){
+        for(int j=1;j<=INVEST;++j){
+            cout << setw(9)<<best[i][j];
+        }
+        cout << endl;
+    }
+    cout << best[YEARS][max_index]<<endl;
+
+}
+
+int main()
+{
+    vector<vector<double>> r = {
+    {0.09,0.08,0.07,0.06,0.03,0.02,0.11,0.01},
+    {0.05,0.09,0.11,0.03,0.10,0.09,0.02,0.11},
+    {0.15,0.06,0.04,0.13,0.08,0.08,0.10,0.09},
+    {0.01,0.02,0.03,0.04,0.05,0.06,0.07,0.08},
+
+    {0.18,0.09,0.11,0.12,0.13,0.12,0.09,0.08},
+    {0.09,0.08,0.07,0.06,0.03,0.02,0.11,0.01},
+    {0.04,0.22,0.03,0.14,0.05,0.21,0.07,0.08},
+    {0.11,0.02,0.06,0.08,0.09,0.02,0.10,0.14},
+
+    {0.18,0.09,0.11,0.12,0.13,0.12,0.09,0.08},
+    {0.05,0.09,0.11,0.03,0.10,0.09,0.02,0.11}
+    };
+    best_investment(r);
+
+}
