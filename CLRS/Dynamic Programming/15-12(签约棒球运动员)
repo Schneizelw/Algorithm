@@ -1,0 +1,96 @@
+#include<iostream>
+#include<vector>
+#include<utility>
+#include<iomanip>
+#define X 20
+using namespace std;
+
+void Sign_baseball_player(vector<vector<pair<int,int>>> P,
+                          vector<vector<string>> L)
+{
+    vector<vector<int>> vorp;
+    vector<vector<int>> money;
+    vector<vector<vector<string>>> list_of_name;
+    vorp.resize(X+1);
+    money.resize(X+1);
+    list_of_name.resize(X+1);
+
+    int len = P.size()-1;  //number of the player's position
+    int p = P[0].size()-1; //number of the one position's palyers
+    for(int i=0;i<=X;++i){
+        vorp[i].resize(len+1);
+        money[i].resize(len+1);
+        list_of_name[i].resize(len+1);
+    }
+
+    int copy_j,copy_re,copy_k;
+    for(int i=1;i<=X;++i){
+        for(int j=1;j<=len;++j){
+            int max_vorp=vorp[i][j-1];
+            for(int k=1;k<=p;++k){
+                if(P[j][k].second<=i){
+                    int remain_money = i-P[j][k].second;
+                    int temp_vorp = P[j][k].first + vorp[remain_money][j-1];
+                    if(max_vorp<temp_vorp){
+                        copy_j = j;
+                        copy_re = remain_money;
+                        copy_k = k;
+                        max_vorp = temp_vorp;
+                    }
+                }
+            }//for
+            vorp[i][j] = max_vorp;
+            if(max_vorp==vorp[i][j-1]){
+                 money[i][j] = money[i][j-1];
+                 list_of_name[i][j] =  list_of_name[i][j-1];
+            }else{
+                 money[i][j] = P[copy_j][copy_k].second+money[copy_re][copy_j-1];
+                 list_of_name[i][j] = list_of_name[copy_re][copy_j-1];
+                 list_of_name[i][j].push_back(L[copy_j][copy_k]);
+
+
+            }
+        }//for
+    }//for
+
+    for(int i=1;i<=X;++i){
+        for(int j=1;j<=len;++j){
+            cout<< setw(5) << vorp[i][j];
+        }
+        cout << endl;
+    }
+    cout <<endl;
+    for(int i=1;i<=X;++i){
+        for(int j=1;j<=len;++j){
+            cout<< setw(5) << money[i][j];
+        }
+        cout << endl;
+    }
+    cout << vorp[X][len]<<endl;
+    cout << "player¡¯s name list:"<<endl;
+    for(auto u:list_of_name[X][len]) cout << u <<endl;
+}
+
+int main()
+{
+    vector<vector<pair<int,int>>> P={
+        {{0,0},{0,0},{0,0},{0,0},{0,0},{0,0}},
+        {{0,0},{20,2},{23,3},{25,4},{30,6},{18,2}},
+        {{0,0},{25,3},{24,3},{17,1},{26,3},{27,4}},
+        {{0,0},{21,1},{21,1},{23,2},{31,1},{19,2}},
+        {{0,0},{21,2},{23,2},{28,3},{28,4},{25,2}},
+        {{0,0},{33,6},{17,2},{13,1},{25,3},{26,5}},
+        {{0,0},{28,5},{23,2},{22,2},{23,2},{19,3}},
+    };
+     vector<vector<string>> L={
+        {"null","null","null","null","null","null"},
+        {"null","A1","A2","A3","A4","A5"},
+        {"null","B1","B2","B3","B4","B5"},
+        {"null","C1","C2","C3","C4","C5"},
+        {"null","D1","D2","D3","D4","D5"},
+        {"null","E1","E2","E3","E4","E5"},
+        {"null","F1","F2","F3","F4","F5"},
+
+     };
+    Sign_baseball_player(P,L);
+}
