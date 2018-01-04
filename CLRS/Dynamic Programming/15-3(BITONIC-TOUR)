@@ -1,0 +1,63 @@
+#include<iostream>
+#include<vector>
+#include<limits>
+#include<math.h>
+#include<iomanip>
+using namespace std;
+
+
+double dis(pair<int,int> &a,pair<int,int> &b)
+{
+	return sqrt((a.first-b.first)*(a.first-b.first) + (a.second-b.second)*(a.second-b.second));
+}
+
+double bitonic_tour(vector<pair<int,int>> &p)
+{
+	int sz = p.size(); //0Ë÷Òý²»Ê¹ÓÃ
+	int max_index = sz-1;
+	vector<vector<double>> path;
+	path.resize(sz);
+	for(int i=0;i<sz;++i){
+		path[i].resize(sz);
+	}
+	for(int i=0;i<sz;++i){
+		for(int j=0;j<sz;++j){
+			path[i][j] = INT_MAX;
+		}
+	}
+	path[2][1] = dis(p[1],p[2]);
+	for(int i=3;i<sz;++i){
+		for(int j=1;j<i;++j){
+			if(i>j+1){
+				path[i][j] = path[i-1][j]  + dis(p[i],p[i-1]);
+			}
+			else if(i==j+1){
+				for(int k=1;k<j;++k){
+					if((path[j][k]+dis(p[i],p[k]))<path[i][j])
+						path[i][j] = path[j][k]+dis(p[i],p[k]);
+				}//for
+			}//else
+		}//for
+	}//for
+	for(int i=0;i<sz;++i){
+		for(int j=0;j<sz;++j){
+			cout << setw(13)<<path[i][j] ;
+		}
+		cout << endl;
+	}
+	double min = INT_MAX;
+	for(int j=1;j<sz;++j){
+		if(path[max_index][j]+dis(p[max_index],p[j])<min)
+			min = path[max_index][j]+dis(p[max_index],p[j]);
+	}
+	path[max_index][max_index] = min;
+ 	return path[max_index][max_index];
+}
+
+
+
+int main()
+{
+	vector<pair<int,int>> p = {{0,0},{0,6},{1,0},{2,3},{5,4},{6,1},{7,5},{8,2}};
+	cout << bitonic_tour(p);
+}
