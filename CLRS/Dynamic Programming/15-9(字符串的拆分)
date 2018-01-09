@@ -1,0 +1,83 @@
+#include<iostream>
+#include<vector>
+#include<string>
+#include<iomanip>
+using namespace std;
+
+void print(vector<vector<int>> &r,int i,int j)
+{
+    if(r[i][j] != 0){
+        cout << r[i][j] << " ";
+        print(r,i,r[i][j]);
+        print(r,r[i][j]+1,j);
+    }
+}
+
+void split_string(vector<int> L,int nums)
+{
+    nums++;
+    vector<vector<int>> e;
+    vector<vector<int>> r;
+    e.resize(nums);
+    r.resize(nums);
+    for(int i=0;i<=nums;++i) {
+        e[i].resize(nums);
+        r[i].resize(nums);
+    }
+    int ct = L.size();
+    for(int l=1;l<nums;++l){
+       // cout << "l= " << l <<endl;
+        for(int i=1;i<nums-l+1;++i){
+            int j = i+l-1;
+            //cout << "(i,j) " << i << " " <<j <<endl;
+            if(L[ct-1]<i || L[1]>j) e[i][j] = 0;
+            else{
+                int be=0,len=0;
+                // find the split range under [i,j] condition
+                for(int k=1;k<ct;++k){
+                    if(L[k]>=i && L[k]<j){
+                    //if include L[k]==j ,the algorithm will error
+                    //for ex: str[a1,a2...an] -> str1[a1,a2..ak] str2[ak+1,ak+2..an]
+                    //k has been splited in str[a1,a2...an] but in the str1 k also as
+                    //a split pot.on the other hand,if the split pot is the last element
+                    //the split pot is nosense.cause the split location will become a part
+                    //of the first part
+                        if(len==0) be=k;
+                        len++;//L[be,be+len-1]
+                    }
+                    else if(L[k]>j) break;
+                }
+                int minimun = INT_MAX;
+                for(int index=be;index<=be+len-1;++index){
+                    int tot = e[i][L[index]]+e[L[index]+1][j]+(j-i+1);
+                    if(tot<minimun){
+                        r[i][j] = L[index];
+                        minimun = tot;
+                    }
+                }
+                e[i][j] = minimun==INT_MAX ? 0:minimun;
+            }//else
+        }//for
+    }//for
+    for(int i=1;i<nums;++i){
+        for(int j=1;j<nums;++j){
+            cout << setw(4) << e[i][j];
+        }
+        cout << endl;
+    }
+
+    for(int i=1;i<nums;++i){
+        for(int j=1;j<nums;++j){
+            cout << setw(4) << r[i][j];
+        }
+        cout << endl;
+    }
+    print(r,1,nums-1);
+}
+
+
+int main()
+{
+    vector<int> L = {0,2,8,10};
+    split_string(L,20);
+}
