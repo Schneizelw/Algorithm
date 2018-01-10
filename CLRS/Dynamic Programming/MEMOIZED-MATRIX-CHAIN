@@ -1,0 +1,66 @@
+//!MEMOIZED_MATRIX_CHAIN(p)
+/*
+1   n = p.length-1;
+2   let m[1..n,1..n]be a new table
+3   for i = 1 to n
+4       for j = i to n
+5           m[i,j] = ¡Þ
+6   return LOOKUP-CHAIN(m,p,1,n)
+*/
+
+//!LOOKUP_CHAIN(m,p,i,j)
+/*
+1   if m[i,j]<¡Þ
+2       return m[i,j]
+3   if i==j
+4       m[i,j] = 0;
+5   else for k = i to j-1
+6            q = LOOKUP_CHAIN(m,p,i,k)+LOOKUP_CHAIN(m,p,k+1,j)+p(i-1)p(k)p(j)
+7            if q < m[i,j]
+8               m[i.j] = q
+9   return m[i,j]
+*/
+#include<iostream>
+#include<limits>
+#include<vector>
+#include<iomanip>
+using namespace std;
+
+int LOOKUP_CHAIN(vector<vector<int>> m ,vector<int> p,
+                                 int i,int j)
+{
+    if(m[i][j]<INT_MAX)
+        return m[i][j];
+
+    if(i==j)
+        m[i][j]=0;
+    else{
+        for(int k=i;k<=j-1;++k){
+            int q = LOOKUP_CHAIN(m,p,i,k) + LOOKUP_CHAIN(m,p,k+1,j) +
+                    p[i-1]*p[k]*p[j];
+            if(q < m[i][j])
+                m[i][j] = q;
+        }
+    }
+    return m[i][j];
+}
+int MEMOIZED_MATRIX_CHAIN(vector<int> p)
+{
+    int n = p.size()-1;
+    vector<vector<int>> m ;
+    m.resize(n+1);
+    for(int i=0;i<=n;++i) m[i].resize(n+1);
+    for(int i=0;i<=n;++i)
+        for(int j=0;j<=n;++j){
+            m[i][j] = INT_MAX;
+        }
+    return LOOKUP_CHAIN(m,p,1,n);
+}
+
+
+int main()
+{
+    vector<int> p = {30,35,15,5,10,20,25};
+    auto m = MEMOIZED_MATRIX_CHAIN(p);
+    cout << m <<endl;
+}
