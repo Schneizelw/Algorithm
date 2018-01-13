@@ -1,0 +1,63 @@
+//!MEMOIZED-CUT-ROD(p,n)
+/*
+1   let r[0..n] be a new array
+2   for i = 0 to n
+3       r[i] = -∞
+4   return MEMOIZED-CUT-ROD-AUX(p,n,r)
+*/
+
+//!MEMOIZED-CUT-ROD-AUX(p,n,r)
+/*
+1   if r[n] >= 0
+2       return r[n]
+3   if n==0
+3       q = 0
+4   else q = -∞
+5       for i = 1 to n
+6           q = max(q,p[i]+MEMOIZED-CUT-ROD-AUX(p,n-i,r))
+7   r[n] = q
+8   return q;
+*/
+
+#include<iostream>
+#include<vector>
+#include<limits>
+using namespace std;
+
+int q=0;
+int MEMOIZED_CUT_ROD_AUX(vector<int> p, int n,vector<int> &r)
+{                                                     // ^^注意是引用
+    if(r[n]>=0) return r[n];
+    if(n==0) q=0;
+    else{
+        q = INT_MIN;
+        for(int i=1;i<=n;++i){
+            int t = p[i] + MEMOIZED_CUT_ROD_AUX(p,n-i,r);
+            q = q>t? q:t;
+        }
+    }
+    r[n] = q;//如果r不是引用的话 这里写会r 然后递归回去的话 上一层的r还是没变化
+    return q;
+}
+
+int MEMOIZED_CUT_ROD(vector<int> p,int n)
+{
+    vector<int> r;
+    r.resize(n+1);
+    for(int i=0;i<=n;++i){
+        r[i] = INT_MIN;
+    }
+    return MEMOIZED_CUT_ROD_AUX(p,n,r);
+}
+
+int main()
+{
+    vector<int> p = {0,1,5,8,9,10,17,17,20,24,30};
+    int rt = MEMOIZED_CUT_ROD(p,9);
+    cout << rt <<endl;
+}
+
+
+
+
+
