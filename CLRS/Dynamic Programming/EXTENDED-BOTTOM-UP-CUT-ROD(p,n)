@@ -1,0 +1,57 @@
+//!EXTENDED-BOTTOM-UP-CUT-ROD(p,n)
+/*
+1   let r[0..n] and s[0..n] be new arrays
+2   r[0] = 0
+3   for j = 1 to n
+4       q = -¡Þ
+5       for i = 1 to j
+6           if q < p[i] + r[j-i]
+7               q = p[i] + r[j-i]
+8               s[j] = i
+9       r[j] = q
+10  return r and s
+*/
+
+//!PRINT-CUT-ROD-SOLUTION(p,n)
+/*
+1   (r,s) = EXTENDED-BOTTOM-UP-CUT-ROD(p,n)
+2   while n > 0
+3       print s[n]
+4       n = n - s[n]
+*/
+#include<iostream>
+#include<limits>
+#include<vector>
+using namespace std;
+
+vector<int> EXTENDED_BOTTOM_UP_CUT_ROD(vector<int> &p, int n)
+{
+    vector<int> r(n+1,0),s(n+1,0);
+    for(int j=1;j<=n;++j){
+        int q = INT_MIN;
+        for(int i=1;i<=j;++i){
+            if(q<p[i]+r[j-i]){
+                q = p[i]+r[j-i];
+                s[j] = i;
+            }
+        }
+        r[j] = q;
+    }
+    return s;
+}
+
+void PRINT_CUT_ROD_SOLUTION(vector<int> &p, int n)
+{
+    auto s = EXTENDED_BOTTOM_UP_CUT_ROD(p,n);
+    while(n>0){
+        cout << s[n]<<" ";
+        n = n - s[n];
+    }
+}
+
+int main()
+{
+    vector<int> p = {0,1,5,8,9,10,17,17,20,24,30};
+    PRINT_CUT_ROD_SOLUTION(p,9);
+
+}
