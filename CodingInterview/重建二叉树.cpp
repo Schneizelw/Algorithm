@@ -34,8 +34,8 @@ public:
     TreeNode* buildTree(vector<int>& pre,vector<int>& vin,
                         int first,int mid,int last,int& keyIndex,TreeNode* node)
     {                                               //^^^^^^^^^^^ 一定得是引用
+         //构造左孩子
         int key = pre[keyIndex];
-        //构造左孩子
         for(int i=first;i<mid;++i){
             if(vin[i]==key){
                 node->left = new TreeNode(key);
@@ -44,7 +44,7 @@ public:
             }
         }
         //构造右孩子
-        key = pre[keyIndex];
+        key = pre[keyIndex];//更新key
         for(int j=mid+1;j<=last;++j){
             if(vin[j]==key){
                 node->right = new TreeNode(key);
