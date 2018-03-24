@@ -1,0 +1,39 @@
+/*
+时间限制：1秒 空间限制：32768K 热度指数：316383
+本题知识点： 链表
+题目描述
+输入一个链表，输出该链表中倒数第k个结点。
+*/
+
+/*
+链表的长度为len，则倒数k个结点即为正数的第len-k+1个结点。
+求len-k+1有一个前提就是 k不能大于len否则代码错误。
+*/
+
+/*
+struct ListNode {
+	int val;
+	struct ListNode *next;
+	ListNode(int x) :
+			val(x), next(NULL) {
+	}
+};*/
+class Solution {
+public:
+    ListNode* FindKthToTail(ListNode* pListHead, unsigned int k) {  
+        ListNode* ptr = pListHead;
+        int len=0;
+        while(ptr){
+            len++;
+            ptr=ptr->next;
+        }
+        ptr = pListHead;
+        if(k>len) 
+            return nullptr;
+        len = len-k+1;
+        while(--len){
+            ptr=ptr->next;
+        }
+        return ptr;
+    }
+};
