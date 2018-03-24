@@ -37,3 +37,30 @@ public:
         return ptr;
     }
 };
+
+//解法2
+/*
+使用两个指针ptr1和ptr2初始化为指向head，让ptr2先走k-1步，也就是指向了正数第k个元素。
+然后同时移动两个指针，当ptr2指向最后一个元素的时候，ptr1指向的即为倒数第k个元素。
+*/
+class Solution {
+public:
+    ListNode* FindKthToTail(ListNode* pListHead, unsigned int k) {  
+        if(!pListHead || k==0 ) 
+            return nullptr;
+        ListNode* ptr1 = pListHead;
+        ListNode* ptr2 = pListHead;
+        for(unsigned int i=1;i<k;++i)
+        {
+            ptr2 = ptr2->next;
+            if(ptr2==nullptr) 
+                return nullptr; 
+        }
+        
+        while(ptr2->next){
+            ptr1=ptr1->next;
+            ptr2=ptr2->next;
+        }
+        return ptr1; 
+    }
+};
