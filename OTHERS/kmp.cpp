@@ -25,7 +25,7 @@ void cal_next(char* str,int *next,int len)
 
 int KMP(char* str,int slen,char *ptr,int plen)
 {
-    int *next = new int(slen);
+    int *next = new int(plen);
     cal_next(ptr,next,plen);
     int k = -1;
     for(int i=0;i<slen;++i)
